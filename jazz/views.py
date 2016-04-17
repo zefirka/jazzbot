@@ -8,7 +8,6 @@ def index(request):
     return HttpResponse("Hello stranger. Jazz greets you.")
 
 def api(req, token):
-	print 'API'
 	if token == TOKEN:
 		return HttpResponse(process(req))
 	else:

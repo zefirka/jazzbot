@@ -36,8 +36,10 @@ def setWebhook(url):
 	})
 
 def process(req):
-	print 'get a post request'
-	return 'hello'
+	message = json.loads(req.body, encoding='utf-8').get('message', None)
+	
+	if (message.get('text')):
+		print send_jazz(message.get('chat').get('id'))
 
 def call(url, method='GET', data={}, headers={}):
 	if method is 'GET':
