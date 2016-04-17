@@ -16,5 +16,4 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jazz.settings")
 
 application = get_wsgi_application()
 
-
 initialize()

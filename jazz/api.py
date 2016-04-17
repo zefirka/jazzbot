@@ -6,33 +6,38 @@ import json
 from credentials import TOKEN
 
 URL = 'https://api.telegram.org/bot{token}/{method}'
-
 CHIRUNO_STICKER = 'BQADAgADvgADzHD_Aieg-50xIfcAAQI'
 JAZZ_STICKER = 'BQADAgADBQADIyIEBsnMqhlT3UvLAg'
+WEBHOOK = 'https://jazzjail.herokuapp.com/api/{token}'.format(token=TOKEN)
 
 def method(m):
 	return URL.format(token=TOKEN, method=m)
 
+# Will containt setWebhook
 def initialize():
 	auth = get(method('getMe'))
 	
 	if (auth.get('ok') is True):
-		updates = get(method('getUpdates'))
-		last_chat_id = updates.get('result').pop().get('message').get('chat').get('id')
+		setup = setWebhook(WEBHOOK)
 		
-		reqs = send_jazz(last_chat_id)
-		
-		if (reqs):
-			print 'All requests sent successfully'
+		if (setup.get('ok')):
+			print 'Webhook setted up successfully'
 		else:
-			print 'Some req failed'
+			print 'Error'
 	else:
-		print 'Атятят'
-
-
+		print 'error';
 
 	return False
 
+
+def setWebhook(url):
+	return get(method('setWebhook'), {
+		'url': url
+	})
+
+def process(req):
+	print 'get a post request'
+	return 'hello'
 
 def call(url, method='GET', data={}, headers={}):
 	if method is 'GET':
@@ -42,16 +47,14 @@ def call(url, method='GET', data={}, headers={}):
 	
 	req.encoding = 'utf-8'
 
-	return json.loads(req.text)
+	return json.loads(req.text) if req and req.text else None
 
 
-def get(url, data={}, headers={}):
-    return call(url, 'GET', data, headers)
+def get(url, data={}):
+    return call(url, 'GET', data)
 
-def post(url, data={}, headers={}):
-    return call(url, 'POST', data, {
-		'Content-Type' : 'application/json' 
-    })
+def post(url, data={}):
+    return call(url, 'POST', data)
 
 def send_jazz(id):
 	reqs = [
