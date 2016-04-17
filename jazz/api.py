@@ -8,7 +8,7 @@ from credentials import TOKEN
 URL = 'https://api.telegram.org/bot{token}/{method}'
 CHIRUNO_STICKER = 'BQADAgADvgADzHD_Aieg-50xIfcAAQI'
 JAZZ_STICKER = 'BQADAgADBQADIyIEBsnMqhlT3UvLAg'
-WEBHOOK = 'https://jazzjail.herokuapp.com/api/{token}'.format(token=TOKEN)
+WEBHOOK = 'https://jazzjail.herokuapp.com/api/{token}/'.format(token=TOKEN)
 
 def method(m):
 	return URL.format(token=TOKEN, method=m)
