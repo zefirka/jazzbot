@@ -70,6 +70,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'jazz.wsgi.application'
 
+CSRF_COOKIE_SECURE = False
+
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
