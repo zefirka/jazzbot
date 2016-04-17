@@ -1,0 +1,8 @@
+{
+  "name": "Jazzbot",
+  "description": "Look at this cat! Why is he so angry?",
+  "image": "heroku/python",
+  "repository": "https://github.com/zefirka/jazzbot",
+  "keywords": ["python", "django" ],
+  "addons": [ "heroku-postgresql" ]
+}
