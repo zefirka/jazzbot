@@ -27,8 +27,6 @@ def initialize():
 	else:
 		print 'error';
 
-	return False
-
 
 def setWebhook(url):
 	return get(method('setWebhook'), {
@@ -38,8 +36,13 @@ def setWebhook(url):
 def process(req):
 	message = json.loads(req.body, encoding='utf-8').get('message', None)
 	
-	if (message.get('text')):
-		print send_jazz(message.get('chat').get('id'))
+	if (message.get('text') == 'Лови Джаза'.decode('utf-8')):
+		send = send_jazz(message.get('chat').get('id'))
+
+		if (send):
+			print 'Jazz was sended successfully'
+		else:
+			print 'An error occured while Jazz sending'
 
 def call(url, method='GET', data={}, headers={}):
 	if method is 'GET':
