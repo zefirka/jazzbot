@@ -88,7 +88,7 @@ def send_jazz(id):
 
 def send_nie_ma(id):
 	reqs = [
-		get(metod('sendMessage'), {
+		get(method('sendMessage'), {
 			'chat_id': id,
 			'text': 'nie ma.'
 		})
