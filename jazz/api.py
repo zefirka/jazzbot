@@ -39,6 +39,9 @@ def process(req):
 	if (message.get('text') == 'Лови Джаза'.decode('utf-8')):
 		send = send_jazz(message.get('chat').get('id'))
 
+	elif (message.get('text') == 'gdzie jest śnieg?'.decode('utf-8')):
+		send = send_nie_ma(message.get('chat').get('id'))
+
 		if (send):
 			print 'Jazz was sended successfully'
 		else:
