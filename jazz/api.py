@@ -44,9 +44,6 @@ def process(req):
 		else:
 			print 'An error occured while Jazz sending'
 
-	elif (message.get('text') == 'gdzie jest śnieg?'.decode('utf-8')):
-		send = send_nie_ma(message.get('chat').get('id'))
-
 def call(url, method='GET', data={}, headers={}):
 	if method is 'GET':
 		req = requests.get(url, params=data, headers={})
@@ -85,9 +82,3 @@ def send_jazz(id):
 	]
 
 	return len(filter(lambda req: req.get('ok') != True, reqs)) == 0
-
-def send_nie_ma(id):
-	return get(method('sendMessage'), {
-		'chat_id': id,
-		'text': 'nie ma.'
-	})
