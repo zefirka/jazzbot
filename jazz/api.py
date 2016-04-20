@@ -82,3 +82,13 @@ def send_jazz(id):
 	]
 
 	return len(filter(lambda req: req.get('ok') != True, reqs)) == 0
+
+def send_nie_ma(id):
+	reqs = [
+		get(metod('sendMessage'), {
+			'chat_id': id,
+			'text': 'nie ma.'
+		})
+	]
+	
+	return len(filter(lambda req: req.get('ok') != True, reqs)) == 0
