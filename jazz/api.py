@@ -51,8 +51,11 @@ def call(url, method='GET', data={}, headers={}):
 		req = requests.post(url, data=json.dumps(data), headers={})
 	
 	req.encoding = 'utf-8'
+	
+	print req.text
+	print req
 
-	return json.loads(req.text) if req and req.text else None
+	return json.loads(req.text) if req and req.text else {'ok': False}
 
 
 def get(url, data={}):
