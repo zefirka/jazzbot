@@ -58,12 +58,18 @@ def equals(text):
 # ACTIONS DICT
 actions = {
 	'jazz': {
-		'match': equals('лови джаза'.decode('utf-8')),
+		'match': [
+			equals('лови джаза'.decode('utf-8')),
+			equals('/catch')
+		],
 		'action': send_jazz,
 		'after': print_jazz_status
 	},
 	'sneg': {
-		'match': lambda text: re.match(re.compile(r'^gdzie jest [sś]nieg\??$'.decode('utf-8')), text),
+		'match': [
+			lambda text: re.match(re.compile(r'^gdzie jest [sś]nieg\??$'.decode('utf-8')), text),
+			equals('/gdziesnieg')
+		],
 		'action': send('nie ma.')
 	},
 	'hello': {
@@ -71,6 +77,9 @@ actions = {
 		'action': send('я не бака')
 	}
 }
+
+def some(fn, arr):
+	return bool(len(filter(fn, arr)))
 
 #################################
 # Will containt setWebhook
@@ -101,8 +110,15 @@ def process(req):
 		match = actions.get(action_name).get('match')
 		action = actions.get(action_name).get('action')
 		after = actions.get(action_name).get('after')
+		pred = False
 
-		if (match(text)):
+		if (isinstance(match, list)):
+			for matcher in match:
+				pred = pred or matcher(text)
+		else:
+			pred = match(text)
+
+		if (pred):
 			result = action(message)
 			if (after):
 				after(result)
