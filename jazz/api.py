@@ -91,7 +91,11 @@ def initialize():
 # Calls when request recieved
 def process(req):
 	message = json.loads(req.body, encoding='utf-8').get('message', None)
-	text = message.get('text').lower()
+	print message
+	text = message.get('text', '').lower()
+
+	if not text:
+		send('Jazz Bot is unreachable')
 
 	for action_name in actions:
 		match = actions.get(action_name).get('match')
