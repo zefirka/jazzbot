@@ -19,6 +19,7 @@ def print_jazz_status(status):
 
 def send_jazz(message):
 	id = message.get('chat').get('id')
+	print id
 	reqs = [
 		get(method('sendMessage'), {
 			'chat_id': id,
@@ -51,13 +52,13 @@ def send(text):
 	return send_message
 
 def equals(text):
-	return lambda recieved_text: text.decode('utf-8') == recieved_text.decode('utf-8')
+	return lambda recieved_text: text == recieved_text
 
 #################################
 # ACTIONS DICT
 actions = {
 	'jazz': {
-		'match': equals('лови джаза'),
+		'match': equals('лови джаза'.decode('utf-8')),
 		'action': send_jazz,
 		'after': print_jazz_status
 	},
@@ -90,13 +91,14 @@ def initialize():
 # Calls when request recieved
 def process(req):
 	message = json.loads(req.body, encoding='utf-8').get('message', None)
-	text = message.get('text').lower()
+	text = message.get('text').lower().decode('utf-8')
 
 	for action_name in actions:
 		match = actions.get(action_name).get('match')
 		action = actions.get(action_name).get('action')
 		after = actions.get(action_name).get('after')
-
+		print text
+		print match(text);
 		if (match(text)):
 			result = action(message)
 			if (after):
