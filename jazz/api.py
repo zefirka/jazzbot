@@ -1,70 +1,24 @@
 # coding=utf-8
 
-import requests
 import json
+import re
 
 from credentials import TOKEN
+from call import get
 
 URL = 'https://api.telegram.org/bot{token}/{method}'
 CHIRUNO_STICKER = 'BQADAgADvgADzHD_Aieg-50xIfcAAQI'
 JAZZ_STICKER = 'BQADAgADBQADIyIEBsnMqhlT3UvLAg'
 WEBHOOK = 'https://jazzjail.herokuapp.com/api/{token}/'.format(token=TOKEN)
 
-def method(m):
-	return URL.format(token=TOKEN, method=m)
+def print_jazz_status(status):
+	if status:
+		print 'Jazz was sended successfully' 
+	else: 
+		print 'An error was occured'
 
-# Will containt setWebhook
-def initialize():
-	auth = get(method('getMe'))
-	
-	if (auth.get('ok') is True):
-		setup = setWebhook(WEBHOOK)
-		
-		if (setup.get('ok')):
-			print 'Webhook setted up successfully'
-		else:
-			print 'Error'
-	else:
-		print 'error';
-
-
-def setWebhook(url):
-	return get(method('setWebhook'), {
-		'url': url
-	})
-
-def process(req):
-	message = json.loads(req.body, encoding='utf-8').get('message', None)
-	
-	if (message.get('text') == 'Лови Джаза'.decode('utf-8')):
-		send = send_jazz(message.get('chat').get('id'))
-
-		if (send):
-			print 'Jazz was sended successfully'
-		else:
-			print 'An error occured while Jazz sending'
-
-	elif (message.get('text') == 'gdzie jest śnieg?'.decode('utf-8')):
-		send = send_nie_ma(message.get('chat').get('id'))
-
-def call(url, method='GET', data={}, headers={}):
-	if method is 'GET':
-		req = requests.get(url, params=data, headers={})
-	else:
-		req = requests.post(url, data=json.dumps(data), headers={})
-	
-	req.encoding = 'utf-8'
-
-	return json.loads(req.text) if req and req.text else None
-
-
-def get(url, data={}):
-    return call(url, 'GET', data)
-
-def post(url, data={}):
-    return call(url, 'POST', data)
-
-def send_jazz(id):
+def send_jazz(message):
+	id = message.get('chat').get('id')
 	reqs = [
 		get(method('sendMessage'), {
 			'chat_id': id,
@@ -86,8 +40,74 @@ def send_jazz(id):
 
 	return len(filter(lambda req: req.get('ok') != True, reqs)) == 0
 
-def send_nie_ma(id):
-	return get(method('sendMessage'), {
-		'chat_id': id,
-		'text': 'nie ma.'
+def send(text):
+	def send_message(message):
+		id = message.get('chat').get('id')
+
+		return get(method('sendMessage'), {
+			'chat_id': id,
+			'text': text
+		})
+	return send_message
+
+def equals(text):
+	return lambda recieved_text: text.decode('utf-8') == recieved_text.decode('utf-8')
+
+#################################
+# ACTIONS DICT
+actions = {
+	'jazz': {
+		'match': equals('лови джаза'),
+		'action': send_jazz,
+		'after': print_jazz_status
+	},
+	'sneg': {
+		'match': lambda text: re.match(re.compile(r'^gdzie jest [sś]nieg\??$'.decode('utf-8')), text),
+		'action': send('nie ma.')
+	},
+	'hello': {
+		'match': equals('baka!'),
+		'action': send('я не бака')
+	}
+}
+
+#################################
+# Will containt setWebhook
+def initialize():
+	auth = get(method('getMe'))
+	
+	if (auth.get('ok') is True):
+		setup = setWebhook(WEBHOOK)
+		
+		if (setup.get('ok')):
+			print 'Webhook setted up successfully'
+		else:
+			print 'Error'
+	else:
+		print 'error';
+
+
+# Calls when request recieved
+def process(req):
+	message = json.loads(req.body, encoding='utf-8').get('message', None)
+	text = message.get('text').lower()
+
+	for action_name in actions:
+		match = actions.get(action_name).get('match')
+		action = actions.get(action_name).get('action')
+		after = actions.get(action_name).get('after')
+
+		if (match(text)):
+			result = action(message)
+			if (after):
+				after(result)
+				return True
+
+## Helpers
+def method(m):
+	return URL.format(token=TOKEN, method=m)
+
+def setWebhook(url):
+	return get(method('setWebhook'), {
+		'url': url
 	})
