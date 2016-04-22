@@ -97,8 +97,7 @@ def process(req):
 		match = actions.get(action_name).get('match')
 		action = actions.get(action_name).get('action')
 		after = actions.get(action_name).get('after')
-		print text
-		print match(text);
+
 		if (match(text)):
 			result = action(message)
 			if (after):
