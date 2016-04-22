@@ -91,7 +91,7 @@ def initialize():
 # Calls when request recieved
 def process(req):
 	message = json.loads(req.body, encoding='utf-8').get('message', None)
-	text = message.get('text').lower().decode('utf-8')
+	text = message.get('text').lower()
 
 	for action_name in actions:
 		match = actions.get(action_name).get('match')
