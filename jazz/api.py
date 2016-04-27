@@ -19,7 +19,7 @@ def print_jazz_status(status):
 
 def send_jazz(message):
 	id = message.get('chat').get('id')
-	print id
+
 	reqs = [
 		get(method('sendMessage'), {
 			'chat_id': id,
@@ -39,7 +39,7 @@ def send_jazz(message):
 		})
 	]
 
-	return len(filter(lambda req: req.get('ok') != True, reqs)) == 0
+	return len(filter(lambda req: req and req.get('ok') != True, reqs)) == 0
 
 def send(text):
 	def send_message(message):
@@ -54,21 +54,24 @@ def send(text):
 def equals(text):
 	return lambda recieved_text: text == recieved_text
 
+def matches(regex):
+	return lambda text: re.match(re.compile(regex), text),
+
 #################################
 # ACTIONS DICT
 actions = {
 	'jazz': {
 		'match': [
 			equals('лови джаза'.decode('utf-8')),
-			equals('/catch')
+			matches(r'^/catch(@JazzJail_bot)?$'.decode('utf-8'))
 		],
 		'action': send_jazz,
 		'after': print_jazz_status
 	},
 	'sneg': {
 		'match': [
-			lambda text: re.match(re.compile(r'^gdzie jest [sś]nieg\??$'.decode('utf-8')), text),
-			equals('/gdziesnieg')
+			matches(r'^gdzie jest [sś]nieg\??$'.decode('utf-8')),
+			matches(r'/gdziesnieg(@JazzJail_bot)?$'.decode('utf-8'))
 		],
 		'action': send('nie ma.')
 	},
