@@ -55,7 +55,7 @@ def equals(text):
 	return lambda recieved_text: text == recieved_text
 
 def matches(regex):
-	return lambda text: re.match(re.compile(regex), text),
+	return lambda text: re.match(re.compile(regex), text)
 
 #################################
 # ACTIONS DICT
