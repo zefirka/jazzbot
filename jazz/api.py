@@ -63,7 +63,7 @@ actions = {
 	'jazz': {
 		'match': [
 			equals('лови джаза'.decode('utf-8')),
-			matches(r'^/catch(@JazzJail_bot)?$'.decode('utf-8'))
+			matches(r'^/catch(@jazzjail_bot)?$'.decode('utf-8'))
 		],
 		'action': send_jazz,
 		'after': print_jazz_status
@@ -71,13 +71,13 @@ actions = {
 	'sneg': {
 		'match': [
 			matches(r'^gdzie jest [sś]nieg\??$'.decode('utf-8')),
-			matches(r'/gdziesnieg(@JazzJail_bot)?$'.decode('utf-8'))
+			matches(r'/gdziesnieg(@jazzjail_bot)?$'.decode('utf-8'))
 		],
 		'action': send('nie ma.')
 	},
 	'hello': {
 		'match': equals('baka!'),
-		'action': send('я не бака')
+		'action': send('сам бака!')
 	}
 }
 
