@@ -102,8 +102,14 @@ def initialize():
 
 # Calls when request recieved
 def process(req):
-	message = json.loads(req.body, encoding='utf-8').get('message', None)
-	print message
+	body = json.loads(req.body, encoding='utf-8')
+	print body
+	message = body.get('message', None)
+	
+	if not message:
+		print 'Error'
+		return
+
 	text = message.get('text', '').lower()
 
 	if not text:
