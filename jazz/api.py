@@ -107,7 +107,8 @@ def process(req):
 	message = body.get('message', None)
 	
 	if not message:
-		print 'Error'
+		print 'An error occured'
+		print body
 		return
 
 	text = message.get('text', '').lower()

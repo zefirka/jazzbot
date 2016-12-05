@@ -9,6 +9,10 @@ def index(request):
 
 def api(req, token):
 	if token == TOKEN:
-		return HttpResponse(process(req))
+		try:
+			result = process(req)
+			return HttpResponse(result)
+		except Exception as err:
+			return HttpResponse('Ooops')
 	else:
-		return HttpResponse('Access granted' if token == TOKEN else 'Fuck off')
+		return HttpResponse('Access granted' if token == TOKEN else 'Go away')
