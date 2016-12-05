@@ -89,4 +89,7 @@ def process(req):
 		body = body.decode('utf-8')
 
 	body = loads(body)
+
+	print(body)
+	
 	bot.process(body)
