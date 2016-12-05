@@ -1,4 +1,6 @@
+import os
 import re
+
 from json import loads
 
 import bobot
@@ -23,8 +25,8 @@ def Sticker(sid):
 # Rules
 jazzRule = Rule({
 	'match': [
-		re.compile(r'^/catch(@jazzjail_bot)?$'),
-		re.compile(r'лови джаза')
+		re.compile(r'^/catch(@jazzjail_bot)?$', re.I),
+		re.compile(r'лови джаза', re.I)
 	],
 	'response': [
 		Text('Я ловлю Джаза'),
@@ -36,7 +38,7 @@ jazzRule = Rule({
 
 sniegRule = Rule({
 	'match': [
-		re.compile(r'^gdzie jest [sś]nieg\??$'),
+		re.compile(r'^gdzie jest [sś]nieg\??$', re.I),
 		re.compile(r'/gdziesnieg(@jazzjail_bot)?$')
 	],
 	'response': Text('nie ma.')
@@ -66,7 +68,7 @@ rules = [
 	jazzRule,
 	sniegRule,
 	bakaRule,
-	fixRule
+	fixRule,
 ]
 
 def initialize():
@@ -90,6 +92,7 @@ def process(req):
 
 	body = loads(body)
 
-	print(body)
-	
+	if os.environ.get('DEBUG') == 'True'
+		print(body)
+
 	bot.process(body)
