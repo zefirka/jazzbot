@@ -1,1 +1,1 @@
-web: gunicorn jazz.wsgi --log-file -
+web: python manage.py runserver
