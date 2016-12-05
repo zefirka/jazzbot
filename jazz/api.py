@@ -91,13 +91,16 @@ def initialize():
 	
 	if (auth.get('ok') is True):
 		setup = setWebhook(WEBHOOK)
-		
-		if (setup.get('ok')):
-			print 'Webhook setted up successfully'
-		else:
-			print 'Error'
+	
+		try:		
+			if (setup.get('ok')):
+				print 'Webhook setted up successfully'
+		except:
+				print setup
 	else:
 		print 'error';
+
+	return None
 
 
 # Calls when request recieved
