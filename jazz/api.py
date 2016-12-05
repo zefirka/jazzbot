@@ -76,7 +76,6 @@ def initialize():
 		print('Webhook setted up successfully')
 	else:
 		print('Error while setting webhook')
-		return None
 
 	bot.rule(rules)
 	return None
