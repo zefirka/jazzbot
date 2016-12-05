@@ -92,7 +92,7 @@ def process(req):
 
 	body = loads(body)
 
-	if os.environ.get('DEBUG') == 'True'
+	if os.environ.get('DEBUG') == 'True':
 		print(body)
 
 	bot.process(body)
