@@ -13,7 +13,7 @@ CHIRUNO_STICKER = 'BQADAgADvgADzHD_Aieg-50xIfcAAQI'
 JAZZ_STICKER = 'BQADAgADBQADIyIEBsnMqhlT3UvLAg'
 WEBHOOK = 'https://jazzjail.herokuapp.com/api/{token}/'.format(token=TOKEN)
 
-bot = bobot.init(TOKEN)
+bot = bobot.init(TOKEN, 'JazzJail_bot')
 
 # Rules
 jazzRule = Rule({
