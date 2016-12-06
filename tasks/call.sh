@@ -13,6 +13,10 @@ curl -XPOST -H "Content-Type: application/json" \
 					\"first_name\": \"test_first_name\",\
 					\"second_name\": \"test_second_name\",\
 					\"username\": \"test_username\"\
+				},\
+				\"chat\": {\
+					\"id\": \"$ID\",\
+					\"type\": \"private\"\
 				}\
 			}\
 		}"

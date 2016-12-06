@@ -1,10 +1,10 @@
 import os
 import re
 
-from json import loads
+from json import loads, dumps
 
 import bobot
-from bobot import Text, Rule
+from bobot import Text, Rule, Sticker, Keyboard
 
 from jazz.credentials import TOKEN
 
@@ -14,13 +14,6 @@ JAZZ_STICKER = 'BQADAgADBQADIyIEBsnMqhlT3UvLAg'
 WEBHOOK = 'https://jazzjail.herokuapp.com/api/{token}/'.format(token=TOKEN)
 
 bot = bobot.init(TOKEN)
-
-def Sticker(sid):
-	return {
-		'sticker': {
-			'sticker': sid
-		}
-	}
 
 # Rules
 jazzRule = Rule({
@@ -54,14 +47,7 @@ bakaRule = Rule({
 
 fixRule = Rule({
 	'match': 'починись плес',
-	'response': {
-		'keyboard': {
-			'resize': True,
-			'text': 'Как скажешь, босс!',
-			'keyboard': [['Ок, бро.']],
-			'autohide': True
-		}
-	}
+	'response': Text('корошо', markup=dumps({'remove_keyboard': True}))
 })
 
 rules = [
