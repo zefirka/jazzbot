@@ -32,7 +32,7 @@ jazzRule = Rule({
 sniegRule = Rule({
 	'match': [
 		re.compile(r'^gdzie jest [sś]nieg\??$', re.I),
-		re.compile(r'/gdziesnieg(@jazzjail_bot)?$')
+		re.compile(r'/gdziesnieg(@jazzjail_bot)?$', re.I)
 	],
 	'response': Text('nie ma.')
 })
