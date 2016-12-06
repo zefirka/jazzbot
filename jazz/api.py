@@ -17,10 +17,8 @@ bot = bobot.init(TOKEN)
 
 # Rules
 jazzRule = Rule({
-	'match': [
-		re.compile(r'^/catch(@jazzjail_bot)?$', re.I),
-		re.compile(r'лови джаза', re.I)
-	],
+	'match': re.compile(r'лови джаза', re.I),
+	'command': 'catch',
 	'response': [
 		Text('Я ловлю Джаза'),
 		Sticker(CHIRUNO_STICKER),
@@ -30,10 +28,8 @@ jazzRule = Rule({
 })
 
 sniegRule = Rule({
-	'match': [
-		re.compile(r'^gdzie jest [sś]nieg\??$', re.I),
-		re.compile(r'/gdziesnieg(@jazzjail_bot)?$', re.I)
-	],
+	'match': re.compile(r'^gdzie jest [sś]nieg\??$', re.I),
+	'command': 'gdziesnieg',
 	'response': Text('nie ma.')
 })
 
