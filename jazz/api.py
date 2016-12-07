@@ -6,7 +6,7 @@ from json import loads, dumps
 import bobot
 from bobot import Text, Rule, Sticker, Keyboard
 
-from jazz.credentials import TOKEN
+from jazz.secrets import TOKEN
 
 URL = 'https://api.telegram.org/bot{token}/{method}'
 CHIRUNO_STICKER = 'BQADAgADvgADzHD_Aieg-50xIfcAAQI'
