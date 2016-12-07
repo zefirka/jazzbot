@@ -1,3 +1,97 @@
-.b-main-form {
-	background-color: red;
+body {
+	margin: 0 10px;
+}
+
+.b-form__field {
+	margin-bottom: 10px;
+}
+
+.b-form__fieldset {
+	margin-bottom: 20px;
+}
+
+.b-form__buttons {
+	position: relative;
+}
+
+.b-form__button {
+	position: absolute;
+	right: 0;
+	top: -10px;
+}
+
+.b-spin {
+	transition: opacity 0 200ms ease-in;
+}
+
+.b-spin_visible_no {
+	display: none;
+}
+
+.g-hidden {
+	display: none;
+}
+
+.b-login {
+	position: relative;
+}
+
+.b-login__sign-out {
+	position: absolute;
+	right: 0;
+	top: -7px;
+}
+
+.b-admin-control {
+	margin-bottom: 15px;
+}
+
+.user-info {
+	display: inline-block;
+	width: 150px;
+	margin-right: 10px;
+}
+
+.user-info-or {
+	margin-right: 10px;
+}
+
+.b-content__item {
+	margin-bottom: 7px;
+}
+
+.paranja {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: white;
+	opacity: 1;
+	z-index: 1;
+	top: 0;
+	left: 0;
+}
+
+.spin2 {
+	margin: 0 auto;
+    width: 120px;
+    top: 20%;
+    position: relative;
+    opacity: 0.4
+}
+
+.b-form__error {
+	margin-bottom: 5px;
+}
+
+.right-col {
+	position: relative;
+}
+
+.b-spin{
+	position: absolute;
+	top: 20px;
+}
+
+.js-remove {
+	cursor: pointer;
 }

@@ -1,6 +1,10 @@
 def compile(tag):
     if isinstance(tag, Tag):
         return tag.val()
+
+    if isinstance(tag, list):
+        return '\n'.join(list(map(compile, tag.copy())))
+    
     return tag
 
 def getAttrs(attrs):
@@ -8,6 +12,7 @@ def getAttrs(attrs):
         return ''
 
     res = ''
+
     for attr in attrs:
         if attrs[attr]:
             attrName = 'class' if attr == 'className' else attr
@@ -16,19 +21,22 @@ def getAttrs(attrs):
 
 class Tag():
     def __init__(self, name, content='', attrs={}, **kvargs):
+        # print('Attrs on {0} and content {1} '.format(name, content))
+        # print(attrs)
+
         self.name = name
         self.content = content
         self.attrs = attrs.copy()
-        self.attrs.update(kvargs)
+        self.attrs.update(kvargs.copy())
+
+        # print(content)
+        # print(attrs)
 
     def val(self):
-        content = self.content
-        attrs = getAttrs(self.attrs.copy())
+        content = compile(self.content)
+        attrs = getAttrs(self.attrs)
 
-        if isinstance(content, list):
-            content = '\n'.join(list(map(compile, content)))
-        elif isinstance(content, Tag):
-            content = content.val()
+        # print(attrs)
 
         return '<{0.name} {1} >{2}</{0.name}>'.format(self, attrs, content)
 
@@ -39,11 +47,14 @@ class SimpleTag(Tag):
 
 def tag(name):
     def createTag(content='', attrs={}, **kvargs):
-        attrs.update(kvargs)
+        # print('Creating tag {0} with attrs = {1}, and kvargs = {2}'.format(name, attrs, kvargs))
+        attrs = attrs.copy()
+        attrs.update(kvargs.copy())
         return Tag(name, content, attrs)
 
     def createSimpleTag(attrs={}, **kvargs):
-        attrs.update(kvargs)
+        attrs = attrs.copy()
+        attrs.update(kvargs.copy())
         return SimpleTag(name[0], '', attrs)
 
     if isinstance(name, list):
@@ -57,6 +68,8 @@ def tag(name):
     Body,
     Div,
     H1,
+    H2,
+    H3,
     Hr,
     P,
     Strong,
@@ -64,14 +77,15 @@ def tag(name):
     Input,
     Button,
     Form,
-    Span
+    Span,
+    Label
 ] = map(tag, [
     'html',
     'head',
     'script',
     'body',
     'div',
-    'h1',
+    'h1', 'h2', 'h3',
     ['hr'],
     'p',
     'strong',
@@ -79,7 +93,8 @@ def tag(name):
     ['input'],
     'button',
     'form',
-    'span'
+    'span',
+    'label'
 ])
 
 def html5(heading, content):
@@ -92,6 +107,16 @@ def A(content, href, target=None):
     return Tag('a', content, href=href, target=target)
 
 def Css(href, attrs={}):
+    attrs = attrs.copy()
     attrs['href'] = href
     attrs['rel'] = 'stylesheet'
-    return Tag('link', '', attrs)
+    return SimpleTag('link', '', attrs)
+
+def Js(src, attrs={}):
+    attrs = attrs.copy()
+    attrs['src'] = src
+    attrs['type'] = 'text/javascript'
+    return Tag('script', '', attrs)
+
+def Template(name, content):
+    return Tag('script', content, id='tpl__'+name, type='template')
