@@ -4,3 +4,4 @@ staticfiles
 .env
 db.sqlite3
 jazz/credentials.py
+jazz/secrets.py
