@@ -56,7 +56,7 @@ rules = [
 def createRule(desc):
 	return Rule({
 		'match': desc[0],
-		'response': desc[1]
+		'response': Text(desc[1])
 	})
 
 simples = list(map(createRule, [
