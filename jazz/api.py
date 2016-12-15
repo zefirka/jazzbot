@@ -70,7 +70,7 @@ def initialize():
 	bot.rule(rules)
 	
 	for r in simples:
-		bor.on(r[0], r[1])
+		bot.on(r[0], r[1])
 
 	return None
 
