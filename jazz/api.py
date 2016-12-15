@@ -53,11 +53,17 @@ rules = [
 	fixRule,
 ]
 
-simples = [
+def createRule(desc):
+	return Rule({
+		'match': desc[0],
+		'response': desc[1]
+	})
+
+simples = list(map(createRule, [
 	['дуй', 'зигуй'],
 	['шалом', 'שָׁלוֹם‎'],
 	['שָׁלוֹם', 'שָׁלוֹם עֲלֵיכֶם']
-]
+]))
 
 def initialize():
 	setup = loads(bot.setWebhook(WEBHOOK))
@@ -67,10 +73,7 @@ def initialize():
 	else:
 		print('Error while setting webhook')
 
-	bot.rule(rules)
-	
-	for r in simples:
-		bot.on(r[0], r[1])
+	bot.rule(rules + simples)
 
 	return None
 
