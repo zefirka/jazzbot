@@ -46,14 +46,17 @@ fixRule = Rule({
 	'response': Text('корошо', markup=dumps({'remove_keyboard': True}))
 })
 
-
-
-
 rules = [
 	jazzRule,
 	sniegRule,
 	bakaRule,
 	fixRule,
+]
+
+simples = [
+	['дуй', 'зигуй'],
+	['шалом', 'שָׁלוֹם‎'],
+	['שָׁלוֹם', 'שָׁלוֹם עֲלֵיכֶם']
 ]
 
 def initialize():
@@ -65,8 +68,10 @@ def initialize():
 		print('Error while setting webhook')
 
 	bot.rule(rules)
+	
+	for r in simples:
+		bor.on(r[0], r[1])
 
-        bot.on('дуй', 'зигуй!')
 	return None
 
 
