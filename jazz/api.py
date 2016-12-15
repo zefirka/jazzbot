@@ -46,6 +46,9 @@ fixRule = Rule({
 	'response': Text('корошо', markup=dumps({'remove_keyboard': True}))
 })
 
+
+
+
 rules = [
 	jazzRule,
 	sniegRule,
@@ -62,6 +65,8 @@ def initialize():
 		print('Error while setting webhook')
 
 	bot.rule(rules)
+
+        bot.on('дуй', 'зигуй!')
 	return None
 
 
