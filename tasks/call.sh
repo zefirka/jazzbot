@@ -12,7 +12,7 @@ curl -XPOST -H "Content-Type: application/json" \
 					\"id\": \"$ID\",\
 					\"first_name\": \"test_first_name\",\
 					\"second_name\": \"test_second_name\",\
-					\"username\": \"test_username\"\
+					\"username\": \"zeffirsky\"\
 				},\
 				\"chat\": {\
 					\"id\": \"$ID\",\
