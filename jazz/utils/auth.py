@@ -13,7 +13,6 @@ def isValidHoster(update, hosters):
 		hi = hoster.get('userid')
 		
 		if hu == uname or hi == uid:
-			print('allowrd')
 			return True
 
 	return False

@@ -11,11 +11,28 @@ def get(collection):
 	return list(map(removeId, list(db[collection].find())))
 
 def insert(collection, item):
-	return db['collection'].insert_one(item)
+	return db[collection].insert_one(item)
+
+def remove(collection, item):
+	return db[collection].delete_one(item)
 
 def removeId(item):
 	del item['_id']
 	return item
 
-def setTokenFor():
-	pass
+def setTokenFor(username, token):
+	return db.owners.update({
+		'username': username
+	}, {
+		'$set': {
+			'token': token
+		}
+	})
+
+def addNewHoster(hoster):
+	insert('hosters', hoster)
+	return get('hosters')
+
+def removeHoster(hoster):
+	remove('hosters', hoster)
+	return get('hosters')

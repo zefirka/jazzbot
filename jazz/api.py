@@ -61,7 +61,7 @@ def createRule(rule):
 
 	desctiption = {
 		'match': result,
-		'response': getResponse(rule.get('response', '__ no response declared in rule __'))
+		'response': getResponse(rule.get('response'))
 	}
 
 	if rule.get('action'):

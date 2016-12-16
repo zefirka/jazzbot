@@ -3,7 +3,7 @@ from json import loads, dumps
 
 from random import randint
 
-from jazz.db import get, setTokenFor
+from jazz.db import get, setTokenFor, addNewHoster, removeHoster
 
 def read():
     with open('jazz/data/users.json', 'r') as jsonfile:
@@ -43,11 +43,12 @@ def isValidLogin(username, pwd, token=''):
 		au = owner.get('username')
 		ap = owner.get('password')
 		at = owner.get('token')
-		
-		if (au == username and ap == pwd) or token is at:
+
+		if (au == username and ap == pwd) or token == at:
 			return {
 				'valid': True,
-				'token': owner.get('token')
+				'token': owner.get('token'),
+				'username': au
 			}
 
 	return {
@@ -62,7 +63,7 @@ def login(request):
 	pwd = body.get('password')
 	token = body.get('token')
 
-	credentials = isValidLogin(username, pwd)
+	credentials = isValidLogin(username, pwd, token)
 
 	if credentials.get('valid'):
 		sendedToken = token
@@ -74,43 +75,45 @@ def login(request):
 		else:
 			token = sendedToken or credentialsToken
 			setTokenFor(username, None)
-
+		print(credentials)
 		res = dumps({
 			'ok': True,
 			'users': get('hosters'),
 			'token': token,
-			'username': username
+			'username': username or credentials.get('username')
 		})
 	else:
 		res = dumps({'ok': False, 'error': 'Wrong password'})
 
 	return HttpResponse(res)
 
+# {username, [token]} -> {ok}
 def signOut(request):
 	body = loads(request.body.decode('utf-8'))
 	username = body.get('username')
-
-	if tokens.get(username):
-		del token[username]
-
+	token = body.get('username')
+	setTokenFor(username, None)
 	return HttpResponse(dumps({'ok': True}))
+
 
 def add(request):
 	body = loads(request.body.decode('utf-8'))
 	username = body.get('username')
 	userid = body.get('userid')
+	
 	token = body.get('token')
 	admin = body.get('admin')
 
-	if token == tokens.get(admin):
-		users = addUser({
+
+	if isValidLogin(None, None, token):
+		hosters = addNewHoster({
 			'username': username,
 			'userid': userid
 		})
 
 		res = dumps({
-			'ok': token == tokens.get(admin),
-			'users': users
+			'ok': True,
+			'users': hosters
 		})
 	else:
 		res = dumps({
@@ -124,18 +127,20 @@ def remove(request):
 	body = loads(request.body.decode('utf-8'))
 	username = body.get('username')
 	userid = body.get('userid')
+	
 	token = body.get('token')
 	admin = body.get('admin')
 
-	if token == tokens.get(admin):
-		users = removeUser({
+
+	if isValidLogin(None, None, token):
+		hosters = removeHoster({
 			'username': username,
 			'userid': userid
 		})
 
 		res = dumps({
-			'ok': token == tokens.get(admin),
-			'users': users
+			'ok': True,
+			'users': hosters
 		})
 	else:
 		res = dumps({
