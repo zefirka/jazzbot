@@ -3,67 +3,74 @@ import re
 
 from json import loads, dumps
 
+from pymongo import MongoClient
+
 import bobot
 from bobot import Text, Rule, Sticker, Keyboard
 
-from jazz.secrets import TOKEN
+from jazz.utils.auth import isValidHoster
+from jazz.secrets import TOKEN, ADMIN, PWD
+from jazz.db import get
 
 URL = 'https://api.telegram.org/bot{token}/{method}'
-CHIRUNO_STICKER = 'BQADAgADvgADzHD_Aieg-50xIfcAAQI'
-JAZZ_STICKER = 'BQADAgADBQADIyIEBsnMqhlT3UvLAg'
 WEBHOOK = 'https://jazzjail.herokuapp.com/api/{token}/'.format(token=TOKEN)
 
+# Environment
 bot = bobot.init(TOKEN, 'JazzJail_bot')
 
-# Rules
-jazzRule = Rule({
-	'match': re.compile(r'лови джаза', re.I),
-	'command': 'catch',
-	'response': [
-		Text('Я ловлю Джаза'),
-		Sticker(CHIRUNO_STICKER),
-		Text('Ха-ха, смотрите какой он недовольный!'),
-		Sticker(JAZZ_STICKER)
-	]
-})
+owners = []
+rules = []
+hosters = []
 
-sniegRule = Rule({
-	'match': re.compile(r'^gdzie jest [sś]nieg\??$', re.I),
-	'command': 'gdziesnieg',
-	'response': Text('nie ma.')
-})
+def update(*args):
+	global rules, owners, hosters
 
-bakaRule = Rule({
-	'match': [
-		'baka!',
-		'бака!'
-	],
-	'response': Text('Сам {text}', interpolate=True)
-})
+	owners = get('owners')
+	hosters = get('hosters')
+	rules = list(map(createRule, get('rules')))
 
-fixRule = Rule({
-	'match': 'починись плес',
-	'response': Text('корошо', markup=dumps({'remove_keyboard': True}))
-})
+actions = {
+	'update': update
+}
 
-rules = [
-	jazzRule,
-	sniegRule,
-	bakaRule,
-	fixRule,
-]
+def getResponse(response):
+	if isinstance(response, list):
+		return list(map(getResponse, response))
+	elif isinstance(response, dict):
+		if response.get('type') == 'sticker':
+			return Sticker(response.get('body'))
+	else:
+		return response
 
-def createRule(desc):
-	return Rule({
-		'match': desc[0],
-		'response': Text(desc[1])
-	})
+def createRule(rule):
+	match = rule.get('match', None)
+	result = match
 
-simples = list(map(createRule, [
-	['дуй', 'зигуй'],
-	['шалом', 'שָׁלוֹם‎'],
-	['שָׁלוֹם', 'שָׁלוֹם עֲלֵיכֶם']
-]))
+	if not match:
+		raise Exception('No match in rule {._id}'.format(rule))
+
+	if isinstance(match, dict):
+		if match.get('type') == 're':
+			flags = {
+				'I': 2,
+				'L': 4,
+				'M': 8
+			}
+			body = match.get('body')
+			result = re.compile(r'' + body.get('text'), flags.get(body.get('flags')))
+
+	desctiption = {
+		'match': result,
+		'response': getResponse(rule.get('response', '__ no response declared in rule __'))
+	}
+
+	if rule.get('action'):
+		desctiption['action'] = actions.get(rule.get('action'))
+
+	if rule.get('command'):
+		desctiption['command'] = rule.get('command')
+	
+	return Rule(desctiption)
 
 def initialize():
 	setup = loads(bot.setWebhook(WEBHOOK))
@@ -73,10 +80,10 @@ def initialize():
 	else:
 		print('Error while setting webhook')
 
-	bot.rule(rules + simples)
+	update()
+	bot.rule(rules)
 
 	return None
-
 
 # Calls when request recieved
 def process(req):
@@ -90,4 +97,7 @@ def process(req):
 	if os.environ.get('DEBUG') == 'True':
 		print(body)
 
-	bot.process(body)
+	if isValidHoster(body, hosters):
+		bot.process(body)
+	else:
+		bot.sendMessage(body.get('message').get('from').get('id'), 'You are not allowed to use this bot')

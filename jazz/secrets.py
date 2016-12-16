@@ -9,3 +9,5 @@ ABSOLUTE_TOTAL_ADMINS=[
 		'p': 'кто умный говна хуюмный'
 	}
 ]
+ADMIN='admin'
+PWD='SpiderMan1984'
