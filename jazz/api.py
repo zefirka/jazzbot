@@ -6,7 +6,7 @@ from json import loads, dumps
 from pymongo import MongoClient
 
 import bobot
-from bobot import Text, Rule, Sticker, Keyboard
+from bobot import Text, Rule, Sticker, Keyboard, Response
 
 from jazz.utils.auth import isValidHoster
 from jazz.secrets import TOKEN, ADMIN, PWD
@@ -39,6 +39,8 @@ def getResponse(response):
 	elif isinstance(response, dict):
 		if response.get('type') == 'sticker':
 			return Sticker(response.get('body'))
+		else:
+			return Response(response)
 	else:
 		return response
 
@@ -58,6 +60,7 @@ def createRule(rule):
 			}
 			body = match.get('body')
 			result = re.compile(r'' + body.get('text'), flags.get(body.get('flags')))
+
 
 	desctiption = {
 		'match': result,
